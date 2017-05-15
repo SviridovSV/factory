@@ -1,6 +1,5 @@
 class Factory
   def self.new(*args, &block)
-    args.each { |arg| raise TypeError, 'Arguments must be symbols' unless arg.kind_of?(Symbol) }
 
     Class.new do
       args.each { |arg| attr_accessor}
