@@ -1,8 +1,9 @@
 class Factory
   def self.new(*args, &block)
+    args.each { |arg| raise TypeError, 'Arguments must be symbol' unless arg.kind_of?(Symbol) }
 
     Class.new do
-      args.each { |arg| attr_accessor}
+      args.each { |arg| attr_accessor arg}
       define_method :initialize do |*params|
         args.each_index do |i|
           instance_variable_set("@#{args[i]}", params[i])
@@ -10,13 +11,8 @@ class Factory
       end
 
       define_method :[] do |arg|
+        raise TypeError, 'Arguments can not be blank' if arg
         get_argument(arg)
-      end
-
-      args.each do |arg|
-        define_method arg do
-          get_argument(arg)
-        end
       end
 
       class_eval(&block) if block_given?
@@ -41,6 +37,7 @@ puts joe.name
 puts joe['name']
 puts joe[:name]
 puts joe[0]
+
 
 Customer1 = Factory.new(:name, :address) do
   def greeting
